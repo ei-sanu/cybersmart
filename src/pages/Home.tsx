@@ -247,7 +247,7 @@ const Home = () => {
             {/* Image 1 */}
             <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
               <img
-                src="public/images/image1.jpg"
+                src="images/image1.jpg"
                 alt="Training Session 1"
                 className="w-full h-full object-cover brightness-110 contrast-125"
               />
@@ -256,7 +256,7 @@ const Home = () => {
             {/* Image 2 */}
             <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
               <img
-                src="public/images/image2.jpg"
+                src="images/image2.jpg"
                 alt="Training Session 2"
                 className="w-full h-full object-cover brightness-110 contrast-125"
               />
@@ -265,7 +265,7 @@ const Home = () => {
             {/* Image 3 */}
             <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
               <img
-                src="public/images/image3.jpg"
+                src="images/image3.jpg"
                 alt="Training Session 3"
                 className="w-full h-full object-cover brightness-110 contrast-125"
               />
