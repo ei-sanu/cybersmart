@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle, Download, Phone, Search, User } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Student, studentsData } from '../data/students';
 
 const Home = () => {
@@ -8,14 +9,16 @@ const Home = () => {
   const [foundStudent, setFoundStudent] = useState<Student | null>(null);
   const [showNoResults, setShowNoResults] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
 
   const handleSearch = () => {
     setShowNoResults(false);
     setFoundStudent(null);
+    setShowInvalidMobile(false); // Reset invalid mobile message
 
     if (searchType === 'mobile') {
       if (searchValue.length !== 10) {
-        alert('Please enter a valid 10-digit mobile number');
+        setShowInvalidMobile(true); // Show invalid mobile message
         return;
       }
       const student = studentsData.find(s => s.mobile === searchValue);
@@ -31,7 +34,7 @@ const Home = () => {
       if (student) {
         setFoundStudent(student);
       } else {
-        alert('No certificate found for this name. Please check the spelling.');
+        setShowNoResults(true); // Changed from alert to use state
       }
     }
   };
@@ -59,6 +62,13 @@ const Home = () => {
     setSearchType('name');
     setSearchValue('');
     setShowNoResults(false);
+    setFoundStudent(null);
+  };
+
+  const resetSearch = () => {
+    setSearchValue('');
+    setShowNoResults(false);
+    setShowInvalidMobile(false);
     setFoundStudent(null);
   };
 
@@ -131,8 +141,27 @@ const Home = () => {
                 Search Certificate
               </button>
 
+              {/* Invalid Mobile Number Message */}
+              {showInvalidMobile && (
+                <div className="mt-6 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
+                  <div className="flex items-center text-red-400 mb-3">
+                    <AlertCircle className="h-5 w-5 mr-2" />
+                    <span className="font-medium">Invalid Mobile Number</span>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-3">
+                    Please enter a valid 10-digit mobile number to search for your certificate.
+                  </p>
+                  <button
+                    onClick={resetSearch}
+                    className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
               {/* No Results Message */}
-              {showNoResults && (
+              {showNoResults && searchType === 'mobile' && (
                 <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-800 rounded-lg">
                   <div className="flex items-center text-yellow-400 mb-3">
                     <AlertCircle className="h-5 w-5 mr-2" />
@@ -147,6 +176,36 @@ const Home = () => {
                   >
                     Search by Name Instead
                   </button>
+                </div>
+              )}
+
+              {/* No Results Message for Name Search */}
+              {showNoResults && searchType === 'name' && (
+                <div className="mt-6 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
+                  <div className="flex items-center text-red-400 mb-3">
+                    <AlertCircle className="h-5 w-5 mr-2" />
+                    <span className="font-medium">Certificate Not Found</span>
+                  </div>
+                  <p className="text-gray-300 text-sm mb-3">
+                    No certificate found for name: {searchValue}
+                  </p>
+                  <div className="flex items-center justify-between mt-4">
+                    <button
+                      onClick={resetSearch}
+                      className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                      Try Again
+                    </button>
+                    <Link
+                      to="/contact"
+                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors flex items-center"
+                    >
+                      <span>Contact Support</span>
+                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
                 </div>
               )}
 
