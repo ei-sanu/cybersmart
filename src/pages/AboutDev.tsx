@@ -19,11 +19,11 @@ const AboutDev = () => {
           <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-white mb-4">Somesh</h2>
-              <p className="text-blue-400 text-xl mb-4">Full Stack Developer & Security Enthusiast</p>
+              <p className="text-blue-400 text-xl mb-4">Front-End Developer & Security Enthusiast</p>
               <p className="text-gray-300 leading-relaxed mb-6">
-                With a passion for cybersecurity and modern web development, I specialize in creating 
-                secure, scalable applications that prioritize user experience and data protection. 
-                The CyberSmart platform represents my commitment to combining cutting-edge technology 
+                With a passion for cybersecurity and modern web development, I specialize in creating
+                secure, scalable applications that prioritize user experience and data protection.
+                The CyberSmart platform represents my commitment to combining cutting-edge technology
                 with practical solutions for educational institutions.
               </p>
               <a
