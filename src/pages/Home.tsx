@@ -1,7 +1,21 @@
 import { AlertCircle, CheckCircle, Download, Phone, Search, User } from 'lucide-react';
 import { useState } from 'react';
 import { Student, studentsData } from '../data/students';
-import { Link } from 'react-router-dom';
+
+const GALLERY_IMAGES = [
+  {
+    url: 'https://lh3.googleusercontent.com/d/1S-dNlNiS0cKhicSgQ5rwmq9C3ISnNd2_',
+    alt: 'Training Session 1',
+  },
+  {
+    url: 'https://lh3.googleusercontent.com/d/14s79cGCKvZx7_1aZ3XRsmbdPcRaveHQf',
+    alt: 'Training Session 2',
+  },
+  {
+    url: 'https://lh3.googleusercontent.com/d/19X_8c6a1ZDFTp_g2NpKCMdaixfJShhFG',
+    alt: 'Training Session 3',
+  },
+];
 
 const Home = () => {
   const [searchType, setSearchType] = useState<'mobile' | 'name'>('mobile');
@@ -32,7 +46,7 @@ const Home = () => {
       if (student) {
         setFoundStudent(student);
       } else {
-        setShowNoResults(true); // Changed from alert to use state
+        alert('No certificate found for this name. Please check the spelling.');
       }
     }
   };
@@ -151,36 +165,6 @@ const Home = () => {
                 </div>
               )}
 
-              {/* No Results Message for Name Search */}
-              {showNoResults && searchType === 'name' && (
-                <div className="mt-6 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
-                  <div className="flex items-center text-red-400 mb-3">
-                    <AlertCircle className="h-5 w-5 mr-2" />
-                    <span className="font-medium">Certificate Not Found</span>
-                  </div>
-                  <p className="text-gray-300 text-sm mb-3">
-                    No certificate found for name: {searchValue}. Please check the spelling.
-                  </p>
-                  <div className="flex items-center justify-between mt-4">
-                    <button
-                      onClick={() => setShowNoResults(false)}
-                      className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
-                    >
-                      Try Again
-                    </button>
-                    <Link
-                      to="/contact"
-                      className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors flex items-center"
-                    >
-                      <span>Contact Support</span>
-                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
-                  </div>
-                </div>
-              )}
-
               {/* Found Student */}
               {foundStudent && (
                 <div className="mt-6 p-6 bg-green-900/20 border border-green-800 rounded-lg">
@@ -258,6 +242,36 @@ const Home = () => {
                 Download your certificates instantly in high-quality PDF format for immediate use.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="py-20 bg-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Training <span className="text-blue-400">Gallery</span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Glimpses from our comprehensive cybersecurity training sessions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {GALLERY_IMAGES.map((image, index) => (
+              <div
+                key={index}
+                className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500"
+              >
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="w-full h-full object-cover brightness-110 contrast-125"
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
