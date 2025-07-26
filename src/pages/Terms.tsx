@@ -156,13 +156,13 @@ const Terms = () => {
             </p>
           </section>
 
-          
+
           <div className="flex items-center space-x-4 p-4 bg-blue-900/20 border border-blue-800 rounded-lg">
             <Shield className="h-6 w-6 text-blue-400 flex-shrink-0" />
             <div>
               <h3 className="text-blue-400 font-semibold mb-1">Agreement</h3>
               <p className="text-gray-300 text-sm">
-                By using CyberSmart, you acknowledge that you have read, understood, and agree to be bound by these terms.
+                By using CyberSmart, you acknowledge that you have read, understood, and agree to  be bound by these terms.
               </p>
             </div>
           </div>
