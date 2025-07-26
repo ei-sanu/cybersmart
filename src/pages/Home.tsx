@@ -2,6 +2,21 @@ import { AlertCircle, CheckCircle, Download, Phone, Search, User } from 'lucide-
 import { useState } from 'react';
 import { Student, studentsData } from '../data/students';
 
+const GALLERY_IMAGES = [
+  {
+    url: "https://drive.google.com/file/d/1S-dNlNiS0cKhicSgQ5rwmq9C3ISnNd2_/view?usp=drive_link",
+    alt: "Training Session 1"
+  },
+  {
+    url: "https://drive.google.com/file/d/14s79cGCKvZx7_1aZ3XRsmbdPcRaveHQf/view?usp=drive_link",
+    alt: "Training Session 2"
+  },
+  {
+    url: "https://drive.google.com/file/d/19X_8c6a1ZDFTp_g2NpKCMdaixfJShhFG/view?usp=drive_link",
+    alt: "Training Session 3"
+  }
+];
+
 const Home = () => {
   const [searchType, setSearchType] = useState<'mobile' | 'name'>('mobile');
   const [searchValue, setSearchValue] = useState('');
@@ -244,32 +259,19 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Image 1 */}
-            <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
-              <img
-                src="./images/image1.jpg"
-                alt="Training Session 1"
-                className="w-full h-full object-cover brightness-110 contrast-125"
-              />
-            </div>
-
-            {/* Image 2 */}
-            <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
-              <img
-                src="./images/image2.jpg"
-                alt="Training Session 2"
-                className="w-full h-full object-cover brightness-110 contrast-125"
-              />
-            </div>
-
-            {/* Image 3 */}
-            <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500">
-              <img
-                src="./images/image3.jpg"
-                alt="Training Session 3"
-                className="w-full h-full object-cover brightness-110 contrast-125"
-              />
-            </div>
+            {GALLERY_IMAGES.map((image, index) => (
+              <div
+                key={index}
+                className="relative aspect-video overflow-hidden rounded-xl border-2 border-blue-500"
+              >
+                <img
+                  src={image.url}
+                  alt={image.alt}
+                  className="w-full h-full object-cover brightness-110 contrast-125"
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </section>
