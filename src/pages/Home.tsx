@@ -1,7 +1,7 @@
 import { AlertCircle, CheckCircle, Download, Phone, Search, User } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Student, studentsData } from '../data/students';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [searchType, setSearchType] = useState<'mobile' | 'name'>('mobile');
@@ -9,7 +9,6 @@ const Home = () => {
   const [foundStudent, setFoundStudent] = useState<Student | null>(null);
   const [showNoResults, setShowNoResults] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [downloadError, setDownloadError] = useState(false);
 
   const handleSearch = () => {
     setShowNoResults(false);
@@ -43,30 +42,15 @@ const Home = () => {
 
     setDownloading(true);
     try {
-      // Get the base URL from environment or default to empty string
-      const baseUrl = import.meta.env.VITE_BASE_URL || '';
-
-      // Create full URL by combining base URL with certificate path
-      const certificateUrl = new URL(foundStudent.certificateUrl, baseUrl).href;
-
-      const response = await fetch(certificateUrl);
-      if (!response.ok) {
-        throw new Error('Certificate not found');
-      }
-
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-
+      // Simulate download process
       const link = document.createElement('a');
-      link.href = downloadUrl;
+      link.href = foundStudent.certificateUrl;
       link.download = `${foundStudent.name}_Certificate.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      setDownloadError(true);
-      console.error('Download error:', error);
+      alert('Error downloading certificate. Please try again.');
     } finally {
       setDownloading(false);
     }
@@ -149,7 +133,7 @@ const Home = () => {
               </button>
 
               {/* No Results Message */}
-              {showNoResults && searchType === 'mobile' && (
+              {showNoResults && (
                 <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-800 rounded-lg">
                   <div className="flex items-center text-yellow-400 mb-3">
                     <AlertCircle className="h-5 w-5 mr-2" />
@@ -175,7 +159,7 @@ const Home = () => {
                     <span className="font-medium">Certificate Not Found</span>
                   </div>
                   <p className="text-gray-300 text-sm mb-3">
-                    No certificate found for name: {searchValue}
+                    No certificate found for name: {searchValue}. Please check the spelling.
                   </p>
                   <div className="flex items-center justify-between mt-4">
                     <button
@@ -225,36 +209,6 @@ const Home = () => {
                     <Download className="h-5 w-5 mr-2" />
                     {downloading ? 'Downloading...' : 'Download Certificate'}
                   </button>
-
-                  {/* Download Error Message */}
-                  {downloadError && (
-                    <div className="mt-4 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
-                      <div className="flex items-center text-red-400 mb-3">
-                        <AlertCircle className="h-5 w-5 mr-2" />
-                        <span className="font-medium">Download Failed</span>
-                      </div>
-                      <p className="text-gray-300 text-sm mb-3">
-                        Unable to download the certificate. Please try again or contact support.
-                      </p>
-                      <div className="flex items-center space-x-4">
-                        <button
-                          onClick={() => {
-                            setDownloadError(false);
-                            handleDownload();
-                          }}
-                          className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
-                        >
-                          Try Again
-                        </button>
-                        <Link
-                          to="/contact"
-                          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors flex items-center"
-                        >
-                          Contact Support
-                        </Link>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
             </div>
