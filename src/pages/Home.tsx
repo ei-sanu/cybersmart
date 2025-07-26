@@ -9,16 +9,15 @@ const Home = () => {
   const [foundStudent, setFoundStudent] = useState<Student | null>(null);
   const [showNoResults, setShowNoResults] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [showInvalidMobile, setShowInvalidMobile] = useState(false);
+  const [downloadError, setDownloadError] = useState(false);
 
   const handleSearch = () => {
     setShowNoResults(false);
     setFoundStudent(null);
-    setShowInvalidMobile(false); // Reset invalid mobile message
 
     if (searchType === 'mobile') {
       if (searchValue.length !== 10) {
-        setShowInvalidMobile(true); // Show invalid mobile message
+        alert('Please enter a valid 10-digit mobile number');
         return;
       }
       const student = studentsData.find(s => s.mobile === searchValue);
@@ -44,15 +43,30 @@ const Home = () => {
 
     setDownloading(true);
     try {
-      // Simulate download process
+      // Get the base URL from environment or default to empty string
+      const baseUrl = import.meta.env.VITE_BASE_URL || '';
+
+      // Create full URL by combining base URL with certificate path
+      const certificateUrl = new URL(foundStudent.certificateUrl, baseUrl).href;
+
+      const response = await fetch(certificateUrl);
+      if (!response.ok) {
+        throw new Error('Certificate not found');
+      }
+
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+
       const link = document.createElement('a');
-      link.href = foundStudent.certificateUrl;
+      link.href = downloadUrl;
       link.download = `${foundStudent.name}_Certificate.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
     } catch (error) {
-      alert('Error downloading certificate. Please try again.');
+      setDownloadError(true);
+      console.error('Download error:', error);
     } finally {
       setDownloading(false);
     }
@@ -62,13 +76,6 @@ const Home = () => {
     setSearchType('name');
     setSearchValue('');
     setShowNoResults(false);
-    setFoundStudent(null);
-  };
-
-  const resetSearch = () => {
-    setSearchValue('');
-    setShowNoResults(false);
-    setShowInvalidMobile(false);
     setFoundStudent(null);
   };
 
@@ -141,25 +148,6 @@ const Home = () => {
                 Search Certificate
               </button>
 
-              {/* Invalid Mobile Number Message */}
-              {showInvalidMobile && (
-                <div className="mt-6 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
-                  <div className="flex items-center text-red-400 mb-3">
-                    <AlertCircle className="h-5 w-5 mr-2" />
-                    <span className="font-medium">Invalid Mobile Number</span>
-                  </div>
-                  <p className="text-gray-300 text-sm mb-3">
-                    Please enter a valid 10-digit mobile number to search for your certificate.
-                  </p>
-                  <button
-                    onClick={resetSearch}
-                    className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
-                  >
-                    Try Again
-                  </button>
-                </div>
-              )}
-
               {/* No Results Message */}
               {showNoResults && searchType === 'mobile' && (
                 <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-800 rounded-lg">
@@ -191,7 +179,7 @@ const Home = () => {
                   </p>
                   <div className="flex items-center justify-between mt-4">
                     <button
-                      onClick={resetSearch}
+                      onClick={() => setShowNoResults(false)}
                       className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
                     >
                       Try Again
@@ -237,6 +225,36 @@ const Home = () => {
                     <Download className="h-5 w-5 mr-2" />
                     {downloading ? 'Downloading...' : 'Download Certificate'}
                   </button>
+
+                  {/* Download Error Message */}
+                  {downloadError && (
+                    <div className="mt-4 p-4 bg-red-900/20 border border-red-800 rounded-lg animate-fade-in">
+                      <div className="flex items-center text-red-400 mb-3">
+                        <AlertCircle className="h-5 w-5 mr-2" />
+                        <span className="font-medium">Download Failed</span>
+                      </div>
+                      <p className="text-gray-300 text-sm mb-3">
+                        Unable to download the certificate. Please try again or contact support.
+                      </p>
+                      <div className="flex items-center space-x-4">
+                        <button
+                          onClick={() => {
+                            setDownloadError(false);
+                            handleDownload();
+                          }}
+                          className="bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors"
+                        >
+                          Try Again
+                        </button>
+                        <Link
+                          to="/contact"
+                          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors flex items-center"
+                        >
+                          Contact Support
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
